@@ -1,6 +1,6 @@
 // sums.exe 合計値になる加算因数を見つけるためのプログラム
 // Usage sums.exe 合計値 数列
-// 例： sums.exe 14 9,1,5,6,5,4
+// 例： sums.exe 14 915654
 package main
 
 import (
@@ -29,18 +29,34 @@ func main() {
 
 // 引数のから sum と nums をパースする
 func parseArgs() (sum int, nums []int, err error) {
+	if len(os.Args) < 3 {
+		err = fmt.Errorf("Usage: %s sum numbers", os.Args[0])
+		return
+	}
+
 	sum, err = strconv.Atoi(os.Args[1])
 	if err != nil {
 		return
 	}
 
-	for _, s := range strings.Split(os.Args[2], ",") {
-		n, e := strconv.Atoi(s)
-		if e != nil {
-			err = e
-			return
+	if strings.Contains(os.Args[2], ",") {
+		for _, s := range strings.Split(os.Args[2], ",") {
+			n, e := strconv.Atoi(s)
+			if e != nil {
+				err = e
+				return
+			}
+			nums = append(nums, n)
 		}
-		nums = append(nums, n)
+	} else {
+		for i := 0; i < len(os.Args[2]); i++ {
+			n, e := strconv.Atoi(os.Args[2][i : i+1])
+			if e != nil {
+				err = e
+				return
+			}
+			nums = append(nums, n)
+		}
 	}
 
 	return
